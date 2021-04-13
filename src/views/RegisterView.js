@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import { authOperations } from '../redux/Auth';
 
@@ -13,75 +13,76 @@ const styles = {
   },
 };
 
-class RegisterView extends Component {
-  state = {
-    name: '',
-    email: '',
-    password: '',
+const RegisterView = () => {
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  const updateName = event => {
+    setName(event.currentTarget.value);
   };
 
-  handleChange = ({ target: { name, value } }) => {
-    this.setState({ [name]: value });
+  const updateEmail = event => {
+    setEmail(event.currentTarget.value);
   };
 
-  handleSubmit = e => {
-    e.preventDefault();
-
-    console.log(this.props);
-
-    this.props.onRegister(this.state);
-
-    this.setState({ name: '', email: '', password: '' });
+  const updatePassword = event => {
+    setPassword(event.currentTarget.value);
   };
 
-  render() {
-    const { name, email, password } = this.state;
+  // handleChange = ({ target: { name, value } }) => {
+  //   this.setState({ [name]: value });
+  // };
 
-    return (
-      <div>
-        <h1>Страница регистрации</h1>
+  const handleSubmit = event => {
+    event.preventDefault();
+    alert(name);
+  };
 
-        <form
-          onSubmit={this.handleSubmit}
-          style={styles.form}
-          autoComplete="off"
-        >
-          <label style={styles.label}>
-            Имя
-            <input
-              type="text"
-              name="name"
-              value={name}
-              onChange={this.handleChange}
-            />
-          </label>
+  // handleSubmit = e => {
+  //   e.preventDefault();
 
-          <label style={styles.label}>
-            Почта
-            <input
-              type="email"
-              name="email"
-              value={email}
-              onChange={this.handleChange}
-            />
-          </label>
+  //   console.log(this.props);
 
-          <label style={styles.label}>
-            Пароль
-            <input
-              type="password"
-              name="password"
-              value={password}
-              onChange={this.handleChange}
-            />
-          </label>
+  //   this.props.onRegister(this.state);
 
-          <button type="submit">Зарегистрироваться</button>
-        </form>
-      </div>
-    );
-  }
-}
+  //   this.setState({ name: '', email: '', password: '' });
+  // };
+
+  return (
+    <div>
+      <h1>Страница регистрации</h1>
+      <form onSubmit={handleSubmit} style={styles.form} autoComplete="off">
+        <label style={styles.label}>
+          Имя
+          <input type="text" name="name" value={name} onChange={updateName} />
+        </label>
+
+        <label style={styles.label}>
+          Почта
+          <input
+            type="email"
+            name="email"
+            value={email}
+            onChange={updateEmail}
+          />
+        </label>
+
+        <label style={styles.label}>
+          Пароль
+          <input
+            type="password"
+            name="password"
+            value={password}
+            onChange={updatePassword}
+          />
+        </label>
+
+        <button type="submit">Зарегистрироваться</button>
+      </form>
+    </div>
+  );
+};
 
 const mapDispatchToProps = {
   onRegister: authOperations.register,
