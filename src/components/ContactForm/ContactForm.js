@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import styles from './ContactForm.module.scss';
-import { connect } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { addContact } from '../../redux/App/app-operations';
 import { fetchContacts } from '../../redux/App/app-operations';
 import { getContacts } from '../../redux/contacts-selectors';
@@ -74,26 +74,35 @@ import { getContacts } from '../../redux/contacts-selectors';
 // }
 
 // На хуках!
-const ContactForm = () => {
+export default function ContactForm() {
   const [name, setName] = useState('');
+  const [number, setNumber] = useState('');
+  const dispatch = useDispatch();
+  const contacts = useSelector(getContacts);
 
   const updateName = event => {
     setName(event.currentTarget.value);
   };
-
-  const [number, setNumber] = useState('');
 
   const updateNumber = event => {
     setNumber(event.currentTarget.value);
   };
 
   useEffect(() => {
-    fetchContacts();
+    dispatch(fetchContacts(), [dispatch]);
   });
 
   const handleSubmit = event => {
     event.preventDefault();
-    alert(name, number);
+
+    const findContact = contacts.find(contact => contact.name === name);
+    if (findContact) {
+      alert(`${name} is already in the contact`);
+    } else if (number.length !== 0) {
+      dispatch(addContact(name, number));
+      setName('');
+      setNumber('');
+    }
   };
 
   return (
@@ -121,15 +130,4 @@ const ContactForm = () => {
       </button>
     </form>
   );
-};
-
-const mapStateToProps = state => ({
-  contacts: getContacts(state),
-});
-
-const mapDispatchToProps = dispatch => ({
-  onSubmit: (name, number) => dispatch(addContact(name, number)),
-  fetchContacts: () => dispatch(fetchContacts()),
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(ContactForm);
+}

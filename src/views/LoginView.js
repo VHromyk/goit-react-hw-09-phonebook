@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { connect } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { authOperations } from '../redux/Auth';
 
 const styles = {
@@ -13,9 +13,10 @@ const styles = {
   },
 };
 
-const LoginView = () => {
+export default function LoginView() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const dispatch = useDispatch();
 
   const updateEmail = event => {
     setEmail(event.currentTarget.value);
@@ -26,16 +27,10 @@ const LoginView = () => {
 
   const handleSubmit = event => {
     event.preventDefault();
-    alert(`${email} ${password}`);
+    dispatch(authOperations.logIn({ email, password }));
+    setEmail('');
+    setPassword('');
   };
-
-  // handleSubmit = e => {
-  //   e.preventDefault();
-
-  //   this.props.onLogin(this.state);
-
-  //   this.setState({ name: '', email: '', password: '' });
-  // };
 
   return (
     <div>
@@ -66,10 +61,4 @@ const LoginView = () => {
       </form>
     </div>
   );
-};
-
-const mapDispatchToProps = {
-  onLogin: authOperations.logIn,
-};
-
-export default connect(null, mapDispatchToProps)(LoginView);
+}

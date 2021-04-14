@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { connect } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { authOperations } from '../redux/Auth';
 
 const styles = {
@@ -13,10 +13,11 @@ const styles = {
   },
 };
 
-const RegisterView = () => {
+export default function RegisterView() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const dispatch = useDispatch();
 
   const updateName = event => {
     setName(event.currentTarget.value);
@@ -30,24 +31,15 @@ const RegisterView = () => {
     setPassword(event.currentTarget.value);
   };
 
-  // handleChange = ({ target: { name, value } }) => {
-  //   this.setState({ [name]: value });
-  // };
-
   const handleSubmit = event => {
     event.preventDefault();
+    dispatch(authOperations.register({ name, email, password }));
+    setName('');
+    setEmail('');
+    setPassword('');
+
     alert(name);
   };
-
-  // handleSubmit = e => {
-  //   e.preventDefault();
-
-  //   console.log(this.props);
-
-  //   this.props.onRegister(this.state);
-
-  //   this.setState({ name: '', email: '', password: '' });
-  // };
 
   return (
     <div>
@@ -82,10 +74,4 @@ const RegisterView = () => {
       </form>
     </div>
   );
-};
-
-const mapDispatchToProps = {
-  onRegister: authOperations.register,
-};
-
-export default connect(null, mapDispatchToProps)(RegisterView);
+}
