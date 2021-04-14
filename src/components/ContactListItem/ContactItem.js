@@ -1,11 +1,17 @@
 import React from 'react';
-import { connect } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import styles from './ContactListItem.module.scss';
-import PropTypes from 'prop-types';
 import { deleteContact } from '../../redux/App/app-operations';
 import { filterContacts } from '../../redux/contacts-selectors';
 
-const ContacListItem = ({ list, deleteContact }) => {
+export default function ContacListItem() {
+  const list = useSelector(filterContacts);
+  const dispatch = useDispatch();
+
+  const handleDeleteContact = id => {
+    dispatch(deleteContact(id));
+  };
+
   return (
     <ul className={styles.list}>
       {list.map(({ id, name, number }) => (
@@ -15,7 +21,7 @@ const ContacListItem = ({ list, deleteContact }) => {
 
           <button
             type="button"
-            onClick={() => deleteContact(id)}
+            onClick={() => handleDeleteContact(id)}
             className={styles.button}
           >
             X
@@ -24,19 +30,4 @@ const ContacListItem = ({ list, deleteContact }) => {
       ))}
     </ul>
   );
-};
-
-ContacListItem.propTypes = {
-  list: PropTypes.array,
-  deleteContact: PropTypes.func,
-};
-
-const mapStateToProps = state => ({
-  list: filterContacts(state),
-});
-
-const mapDispatchToProps = dispatch => ({
-  deleteContact: id => dispatch(deleteContact(id)),
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(ContacListItem);
+}

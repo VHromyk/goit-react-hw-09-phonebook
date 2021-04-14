@@ -2,7 +2,6 @@ import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { changeFilter } from '../../redux/App/app-actions';
 import styles from './Filter.module.scss';
-import PropTypes from 'prop-types';
 import { getFilter } from '../../redux/contacts-selectors';
 
 export default function Filter() {
